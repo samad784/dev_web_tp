@@ -1,18 +1,17 @@
-const carsRouter = require("./routes/carsRoutes")
-const express = require("express")
-const app = express()
-const port = 3000
-app.use(express.json())
-const db = require("./database")
 
-app.get("/", (req, res) => {
-	res.json({
-		msg: "hello to my cars API !!",
-	})
-})
+// index.js
 
-app.use("/api/cars", carsRouter)
+const express = require('express');
+const app = express();
+const carsRoutes = require('./routes/carsRoutes');
+const port = process.env.PORT || 3000;
 
+app.use(express.json()); // Middleware to parse JSON request bodies
+
+// Routes for cars
+app.use('/api/cars', carsRoutes);
+
+// Start server
 app.listen(port, () => {
-	console.log(`Example app listening at http://localhost:${port}`)
-})
+    console.log(`Example app listening at http://localhost:${port}`);
+});
