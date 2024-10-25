@@ -1,31 +1,21 @@
 const express = require("express")
-const app = express();
-const port = 3000;
-const usersRouter = require("./routes/users.js")
+const router = express.Router()
 
-//MIDDLEWARE
-app.use(express.json());
-//USER Endpoint
-app.use("/api/", usersRouter)
-
-
-
-app.listen(port, () => {
-	console.log(`Serveur en cours d'exécution sur http://localhost:${port}`);
-});
-
-const users = [
-	{ id: 1, firstName: 'John', lastName: 'Doe', role: 'admin' },
+const usersArray = [
+    { id: 1, firstName: 'John', lastName: 'Doe', role: 'admin' },
 	{ id: 2, firstName: 'Jane', lastName: 'Smith', role: 'user' },
 	{ id: 3, firstName: 'Alice', lastName: 'Johnson', role: 'moderator' },
 	{ id: 4, firstName: 'Bob', lastName: 'Brown', role: 'user' },
 	{ id: 5, firstName: 'Charlie', lastName: 'Davis', role: 'admin' }
-];
 
+]
 
+router.get("/users", (req, res) => {
+    res.json(usersArray)
+})
 
 // GET : LIRE Un seul utilisateur
-app.get("/:id", (req, res) => {
+router.get("/:id", (req, res) => {
 	const id = parseInt(req.params.id)
 
 	// trouve son index, verifier si le userIndex est positive
@@ -40,12 +30,12 @@ app.get("/:id", (req, res) => {
 })
 
 // GET : LIRE tous les utilisateurs
-app.get("/", (req, res) => {
+router.get("/", (req, res) => {
 	res.json(users)
 })
 
 // POST : CRÉER un nouvel utilisateur, basé sur les données passées dans le corps(body) de la requête
-app.post("/", (req, res) => {
+router.post("/", (req, res) => {
 	// récupérer toutes les données qui arrivent dans le corps de la requête (body)
 	const { firstName, lastName } = req.body
 
@@ -67,7 +57,7 @@ app.post("/", (req, res) => {
 	res.status(201).json(newUser)
 })
 // PUT : Modifier un utilisateur en fonction de son ID
-app.put("/:id", (req, res) => {
+router.put("/:id", (req, res) => {
     // récupérer toutes les données qui arrivent dans le corps de la requête (body)
 	const {firstName, lastName} = req.body
     // récupère l'id dans la requête et le transforme en int
@@ -86,7 +76,7 @@ app.put("/:id", (req, res) => {
         })
 })
 
-app.delete("/:id", (req, res) => {
+router.delete("/:id", (req, res) => {
 	const id = parseInt(req.params.id)// trouve son index, verifier si le userIndex est positive
 	const userIndex = users.findIndex((user) => user.id === id)
 
@@ -100,3 +90,5 @@ app.delete("/:id", (req, res) => {
 		msg: "utilisateur suprimée",
 	})
 })
+
+module.exports = router
