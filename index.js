@@ -5,20 +5,6 @@ app.use(express.json());
 
 
 
-
-
-app.put("/", (req, res) => {
-	res.json({
-		msg: "ici le PUT !!!",
-	})
-})
-
-app.delete("/", (req, res) => {
-	res.json({
-		msg: "ici le DELETE !!!",
-	})
-})
-
 app.listen(port, () => {
 	console.log(`Serveur en cours d'exécution sur http://localhost:${port}`);
 });
@@ -32,6 +18,21 @@ const users = [
 ];
 
 
+
+// GET : LIRE Un seul utilisateur
+app.get("/:id", (req, res) => {
+	const id = parseInt(req.params.id)
+
+	// trouve son index, verifier si le userIndex est positive
+	const userIndex = users.findIndex((user) => user.id === id)
+
+	// utilisateur non trouvé
+	if (userIndex < 0)
+		return res.status(404).json({ msg: "utilisateur non trouvé" })
+    // si el est trouvé
+
+	res.json(users[userIndex])
+})
 
 // GET : LIRE tous les utilisateurs
 app.get("/", (req, res) => {
@@ -59,4 +60,38 @@ app.post("/", (req, res) => {
 	users.push(newUser)
 	// envoyer le code de statut 201 (créé) et les données du nouvel utilisateur afin de confirmer au client.
 	res.status(201).json(newUser)
+})
+// PUT : Modifier un utilisateur en fonction de son ID
+app.put("/:id", (req, res) => {
+    // récupérer toutes les données qui arrivent dans le corps de la requête (body)
+	const {firstName, lastName} = req.body
+    // récupère l'id dans la requête et le transforme en int
+    const id = parseInt(req.params.id)
+    // trouve son index, verifier si le userIndex est positive
+	const userIndex = users.findIndex((user) => user.id === id)
+    // utilisateur non trouvé
+	if (userIndex < 0)
+		return res.status(404).json({ msg: "utilisateur non trouvé" })
+    // si il est trouvé, nous vérifions quelles valeurs ont été envoyées
+	if (firstName) users[userIndex].firstName = firstName
+	if (lastName) users[userIndex].lastName = lastName
+        res.json({
+            msg: "utilisateur mis à jour",
+            user: users[userIndex],
+        })
+})
+
+app.delete("/:id", (req, res) => {
+	const id = parseInt(req.params.id)// trouve son index, verifier si le userIndex est positive
+	const userIndex = users.findIndex((user) => user.id === id)
+
+	// utilisateur non trouvé
+	if (userIndex < 0)
+		return res.status(404).json({ msg: "utilisateur non trouvé" })
+    // si el est trouvé
+	users.splice(userIndex, 1)
+
+	res.json({
+		msg: "utilisateur suprimée",
+	})
 })
