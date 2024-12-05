@@ -20,13 +20,13 @@ const users = [
 function insertUsers() {
     users.forEach((user) => {
         db.run(
-            `INSERT INTO users (firstName, lastName) VALUES (?, ?)`,
+            "INSERT INTO users (firstName, lastName) VALUES (?, ?)",
             [user.firstName, user.lastName],
-            (err) => {
+            function (err) {
                 if (err) {
-                    console.error("Erreur lors de l'insertion de l'utilisateur :", err.message)
+                    console.error( "error", err.message )
                 } else {
-                    console.log(`Utilisateur inséré : ${user.firstName} ${user.lastName}`)
+                    console.log('Utilisateur inséré: ${user.firstName}, ${user.lastName} ')
                 }
             }
         )
