@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ajouter une Cryptomonnaie</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+<header class="d-flex flex-wrap justify-content-center py-3 text-bg-dark">
+    <h1 class="text-white">Ajouter une Cryptomonnaie</h1>
+</header>
+
+<main class="container my-5">
+    <form id="add-crypto-form">
+        <div class="mb-3">
+            <label for="crypto-name" class="form-label">Nom de la cryptomonnaie</label>
+            <input type="text" class="form-control" id="crypto-name" placeholder="Ex : Bitcoin" />
+        </div>
+        <div class="mb-3">
+            <label for="crypto-symbol" class="form-label">Symbole</label>
+            <input type="text" class="form-control" id="crypto-symbol" placeholder="Ex : BTC" />
+        </div>
+        <div class="mb-3">
+            <label for="crypto-price" class="form-label">Prix (€)</label>
+            <input type="number" class="form-control" id="crypto-price" placeholder="Ex : 28000" />
+        </div>
+        <div class="mb-3">
+            <label for="crypto-logo" class="form-label">URL du logo</label>
+            <input type="url" class="form-control" id="crypto-logo" placeholder="Ex : https://exemple.com/logo.png" />
+        </div>
+        <div class="mb-3">
+            <label for="crypto-description" class="form-label">Description</label>
+            <textarea class="form-control" id="crypto-description" rows="3" placeholder="Ex : Bitcoin est une cryptomonnaie décentralisée..."></textarea>
+        </div>
+        <button type="button" id="add-button" class="btn btn-success">Ajouter</button>
+        <button type="button" id="clear-storage-button" class="btn btn-danger">Effacer le stockage local</button>
+    </form>
+</main>
+
+<script>
+    // Gestion de l'ajout de cryptomonnaies
+    document.getElementById('add-button').addEventListener('click', () => {
+        const name = document.getElementById('crypto-name').value.trim();
+        const symbol = document.getElementById('crypto-symbol').value.trim();
+        const price = parseFloat(document.getElementById('crypto-price').value);
+        const logo = document.getElementById('crypto-logo').value.trim();
+        const description = document.getElementById('crypto-description').value.trim();
+
+        if (!name || !symbol || isNaN(price) || !logo || !description) {
+            alert('Veuillez remplir tous les champs correctement.');
+            return;
+        }
+
+        const newCrypto = { name, symbol, price, logo, description };
+        const cryptos = JSON.parse(localStorage.getItem('cryptos')) || [];
+        cryptos.push(newCrypto);
+        localStorage.setItem('cryptos', JSON.stringify(cryptos));
+        alert('Cryptomonnaie ajoutée avec succès !');
+        document.getElementById('add-crypto-form').reset();
+    });
+
+    // Gestion de la suppression du localStorage
+    document.getElementById('clear-storage-button').addEventListener('click', () => {
+        if (confirm('Êtes-vous sûr de vouloir effacer toutes les données du stockage local ?')) {
+            localStorage.clear();
+            alert('Le stockage local a été effacé.');
+        }
+    });
+</script>
+</body>
+</html>
